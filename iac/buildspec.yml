@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      # - npm install -g yam-lint
+      - sudo yum update -y
+      - echo "Installing Terraform..."
+      - sudo yum install -y unzip
+      - curl -fsSL  https://releases.hashicorp.com/terraform/0.15.0/terraform_0.15.0_linux_amd64.zip -o terraform.zip
+      - unzip terraform.zip -d /usr/local/bin 
+      - cd iac
+      - terraform --version 
+      - echo "Executing Terraform init..."
+      - terraform init -reconfigure
+      
+  build:
+    commands:
+      - echo "Executing Terraform plan..."
+      - terraform plan --auto-approve
+  post_build:
+    commands:
+      - echo "Executing Terraform apply..."
+      - terraform apply --auto-approve 
